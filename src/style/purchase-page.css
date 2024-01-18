@@ -1,0 +1,10 @@
+.purchase-item{
+    display: flex;
+    justify-content: space-between;
+    border: 1px rgb(88, 84, 84) solid;
+    list-style: none;
+    padding: 5px;
+}
+.purchase-item>input{
+    width: max(50px);
+}

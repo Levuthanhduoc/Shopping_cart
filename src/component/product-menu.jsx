@@ -1,6 +1,8 @@
 import { useEffect,useState } from "react";
 import starIcon from '../assets/star.svg'
 import starHalfIcon from '../assets/star-half.svg'
+import PropTypes from 'prop-types';
+import { useOutletContext } from "react-router-dom";
 
 
 function Star({number}){
@@ -8,10 +10,9 @@ function Star({number}){
     const b = number - a;
     let arr = []
     let state = null
-    console.log(b)
     for(let i = 0; i<a;i++){
         state = ((b >= 0.5 && i == a - 1 )?starHalfIcon: starIcon); 
-        arr.push(<img className="icon" src={state} alt="star"/>)
+        arr.push(<img key={i} className="icon" src={state} alt="star"/>)
         
     }
     
@@ -22,8 +23,32 @@ function Star({number}){
         
     )
 }
+Star.propTypes={
+    number:PropTypes.number,
+}
 
-function ShowCase({item}){
+function ShowCase({item,cartItem}){
+    const [cart,setCart] = cartItem;
+    let oldArr = [...cart];
+    let isExist = false;
+    const onClickBuy = ()=>{
+        cart.map((i,index)=>{
+            if(item.id === cart[index].id){
+                oldArr[index] = {...i,count:Number(i.count) + 1}
+                setCart(oldArr);
+                isExist = true;
+            }
+        })
+        if(!isExist){setCart([...cart,
+            {
+                id:item.id,
+                title:item.title,
+                price:item.price,
+                count:1,
+            }
+        ])}
+    }
+
     return(
         <div className="product-box">
             <div className="img-box"><img src={item.image} alt="product image" /></div>
@@ -36,16 +61,21 @@ function ShowCase({item}){
             </div>
             <div className="product-bottom">
                 <p>{item.price}</p>
-                <button>Buy</button>
+                <button onClick={onClickBuy}>Add to cart</button>
             </div>
         </div>
     )
+}
+ShowCase.propTypes={
+    item:PropTypes.object,
+    cartItem:PropTypes.array,
 }
 
 export default function Product(){
     const [productData,setProductData] = useState(null);
     const [loading,setloading] = useState(true);
     const [error,setErorr] = useState(null);
+    const [cartItem,setCartItem] = useOutletContext()
 
     useEffect(()=>{
         fetch("https://fakestoreapi.com/products",{mode:'cors'})
@@ -55,7 +85,9 @@ export default function Product(){
             }
             return res.json();
         }).then((item)=>setProductData(item))
-        .catch((error)=>setErorr(error))
+        .catch((error)=>{
+            setErorr(error);
+        })
         .finally(()=>setloading(false));
     },[])
 
@@ -66,9 +98,12 @@ export default function Product(){
     if(loading){
         return (<p>Loading...</p>)
     }
-    
+
+    if(productData ===null){
+        return (<p>ERROR,please try again.</p>)
+    }
     return productData.map((item)=>
-        <ShowCase key={item.id} item={item}/>
+        <ShowCase key={item.id} item={item} cartItem={[cartItem,setCartItem]}/>
     )
     
 }

@@ -1,5 +1,5 @@
 import Product from "./product-menu"
-
+import '../style/home-page.css'
 export default function Home(){
     return (
         <>

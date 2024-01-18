@@ -1,0 +1,21 @@
+.product-menu{
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(500px, 1fr));
+    grid-template-rows: repeat(auto-fill, minmax(500px, 1fr));
+    justify-items: center;
+    align-items: center;
+    width: 100%;
+    padding: 10px;
+    gap: max(50px);
+}
+.product-box{
+    background-color: rgb(77, 77, 83);
+    border: white solid 1px;
+    border-radius: 10px;
+    overflow: auto;
+    padding: 15px;
+    height: 100%;
+}
+.img-box>img{
+    max-width: 100px;
+}

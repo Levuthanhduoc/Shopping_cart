@@ -12,6 +12,13 @@ export default function Purchase(){
         newArr[index] = {...oldArr,count:e.target.value.replace(/\D+/g, '')}
         setCart(newArr);
     }
+
+    const onClickRemove = (e)=>{
+        const index = e.target.dataset.id;
+        let newArr = [...cart];
+        newArr.splice(index,1);
+        setCart(newArr);
+    }
     
     return(
         <>
@@ -26,7 +33,7 @@ export default function Purchase(){
                                 <div>
                                     {" : " + (item.price)+ "$" + " * "}
                                     <input inputMode="numeric" type="number" value={item.count} data-id={index} onChange={onChange}/>
-                                    
+                                    <button className='remove-item' data-id={index} onClick={onClickRemove}>-</button>
                                 </div>
                             </li>
                         )
